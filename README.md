@@ -6,8 +6,11 @@ Two end-to-end autonomous research runs on the causes of **rollout drift in late
 
 - `Paper 1.pdf` — output of `Auto_Research 1`
 - `Paper 2.pdf` — output of `Auto_Research 2`
+- `LOSSFUNK.pdf` — presentation deck for this submission
 - `Auto_Research 1/AutoResearch 1/` — first run: the Autovoila prompt files + generated spike (`all-spikes/rollout-drift-causal/`)
 - `Auto_Research 2/autovoila/` + `Auto_Research 2/all-spikes/` — second run: the modified Autovoila prompt + generated spike (`all-spikes/rollout-drift-attribution/`)
+
+**Presentation:** [Google Slides](https://docs.google.com/presentation/d/14EAu93B6xOYcvSHlQ3nRFcwFitSCbiRUY2xR4BCFWgM/edit?usp=sharing)
 
 ## Paper 1 — *Training Protocol Dominates Rollout Drift in Latent World Models: A Causal Attribution Study*
 
