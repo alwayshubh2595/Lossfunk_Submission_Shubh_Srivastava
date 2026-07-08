@@ -1,0 +1,26 @@
+| environment   | condition          |   val_mse_mean |   val_mse_std |   train_loss_mean |   marginal_kl_mean |   eff_latent_dim_mean |
+|:--------------|:-------------------|---------------:|--------------:|------------------:|-------------------:|----------------------:|
+| stable_linear | NoReg_Large_1step  |        7e-05   |       7e-05   |           7e-05   |             21.023 |                   4.8 |
+| stable_linear | NoReg_Large_5step  |        0.00046 |       0.00051 |           0.0016  |             61.922 |                   2.8 |
+| stable_linear | NoReg_Small_1step  |        0.00232 |       0.00336 |           0.00234 |             37.382 |                   4   |
+| stable_linear | NoReg_Small_5step  |        0.00013 |       9e-05   |           0.00039 |            192.737 |                   2.6 |
+| stable_linear | SIGReg_Large_1step |        0.00024 |       3e-05   |           0.30854 |             50.516 |                   9   |
+| stable_linear | SIGReg_Large_5step |        0.00058 |       6e-05   |           0.26199 |             49.415 |                   9.2 |
+| stable_linear | SIGReg_Small_1step |        0.00079 |       0.00012 |           0.31755 |             51.205 |                   9.2 |
+| stable_linear | SIGReg_Small_5step |        0.00112 |       0.0001  |           0.28731 |             53.359 |                   9.8 |
+| spiral_2d     | NoReg_Large_1step  |        0.0016  |       0.00134 |           0.00161 |            270.531 |                   4   |
+| spiral_2d     | NoReg_Large_5step  |        0.00131 |       0.002   |           0.01467 |            501.822 |                   2.6 |
+| spiral_2d     | NoReg_Small_1step  |        0.01827 |       0.0248  |           0.01835 |            968.795 |                   4   |
+| spiral_2d     | NoReg_Small_5step  |        0.04701 |       0.09364 |           1.35743 |            467.535 |                   2.6 |
+| spiral_2d     | SIGReg_Large_1step |        0.00087 |       0.0003  |           0.05597 |              3.664 |                   5.2 |
+| spiral_2d     | SIGReg_Large_5step |        0.00091 |       0.00023 |           0.05236 |              3.547 |                   5.4 |
+| spiral_2d     | SIGReg_Small_1step |        0.0012  |       0.00027 |           0.05753 |              3.51  |                   5   |
+| spiral_2d     | SIGReg_Small_5step |        0.00107 |       0.00023 |           0.05251 |              3.353 |                   5.4 |
+| lorenz        | NoReg_Large_1step  |        0.00165 |       0.00139 |           0.00166 |             42.773 |                   7   |
+| lorenz        | NoReg_Large_5step  |        0.00298 |       0.00489 |           0.03626 |             36.052 |                   4.6 |
+| lorenz        | NoReg_Small_1step  |        0.0139  |       0.01086 |           0.01459 |            318.091 |                   4.8 |
+| lorenz        | NoReg_Small_5step  |        0.01013 |       0.0102  |           0.22139 |            252.747 |                   5.4 |
+| lorenz        | SIGReg_Large_1step |        0.00123 |       0.00026 |           0.04786 |              1.565 |                  10   |
+| lorenz        | SIGReg_Large_5step |        0.00058 |       2e-05   |           0.06617 |              1.437 |                  10   |
+| lorenz        | SIGReg_Small_1step |        0.00236 |       0.00048 |           0.04763 |              1.59  |                  10   |
+| lorenz        | SIGReg_Small_5step |        0.0009  |       6e-05   |           0.07329 |              1.593 |                  10.4 |

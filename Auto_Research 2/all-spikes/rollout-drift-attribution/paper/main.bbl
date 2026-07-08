@@ -1,0 +1,63 @@
+\begin{thebibliography}{11}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anonymous(2026)]{anon2026drift}
+Anonymous.
+\newblock Training protocol dominates rollout drift in latent world models: A causal attribution study.
+\newblock \emph{CAISc 2026 submission (prior session artifact)}, 2026.
+
+\bibitem[Balestriero and LeCun(2025)]{balestriero2025lejepa}
+Randall Balestriero and Yann LeCun.
+\newblock {LeJEPA}: Provable and scalable self-supervised learning without the heuristics.
+\newblock \emph{arXiv preprint arXiv:2511.08544}, 2025.
+
+\bibitem[Gao and Xu(2026)]{gao2026fastlewm}
+Yuntian Gao and Xiangyu Xu.
+\newblock Fast {LeWorldModel}.
+\newblock \emph{arXiv preprint arXiv:2606.26217}, 2026.
+
+\bibitem[Green et~al.(2026)Green, Abdallah, and Silva~Filho]{green2026exposure}
+Riku Green, Zahraa~S. Abdallah, and Telmo~M. Silva~Filho.
+\newblock Exposure bias as epistemic underidentification in recursive forecasting.
+\newblock \emph{arXiv preprint arXiv:2606.12990}, 2026.
+
+\bibitem[Hafner et~al.(2023)Hafner, Pasukonis, Ba, and Lillicrap]{hafner2023dreamerv3}
+Danijar Hafner, Jurgis Pasukonis, Jimmy Ba, and Timothy Lillicrap.
+\newblock Mastering diverse domains through world models.
+\newblock \emph{arXiv preprint arXiv:2301.04104}, 2023.
+
+\bibitem[Lamb et~al.(2016)Lamb, Goyal, Zhang, Zhang, Courville, and Bengio]{lamb2016professor}
+Alex Lamb, Anirudh Goyal, Ying Zhang, Saizheng Zhang, Aaron Courville, and Yoshua Bengio.
+\newblock Professor forcing: A new algorithm for training recurrent networks.
+\newblock \emph{Advances in Neural Information Processing Systems}, 2016.
+
+\bibitem[LeCun(2022)]{lecun2022path}
+Yann LeCun.
+\newblock A path towards autonomous machine intelligence.
+\newblock \emph{OpenReview preprint}, 2022.
+
+\bibitem[Maes et~al.(2026)Maes, Le~Lidec, Scieur, LeCun, and Balestriero]{maes2026lewm}
+Lucas Maes, Quentin Le~Lidec, Damien Scieur, Yann LeCun, and Randall Balestriero.
+\newblock {LeWorldModel}: Stable end-to-end joint-embedding predictive architecture from pixels.
+\newblock \emph{arXiv preprint arXiv:2603.19312}, 2026.
+
+\bibitem[Sobal et~al.(2025)Sobal, Zhang, Cho, Balestriero, Rudner, and LeCun]{sobal2025planning}
+Vlad Sobal, Wancong Zhang, Kyunghyun Cho, Randall Balestriero, Tim G.~J. Rudner, and Yann LeCun.
+\newblock Learning from reward-free offline data: A case for planning with latent dynamics models.
+\newblock \emph{arXiv preprint arXiv:2502.14819}, 2025.
+
+\bibitem[Zhou et~al.(2024)Zhou, Pan, LeCun, and Pinto]{zhou2024dinowm}
+Gaoyue Zhou, Hengkai Pan, Yann LeCun, and Lerrel Pinto.
+\newblock {DINO-WM}: World models on pre-trained visual features enable zero-shot planning.
+\newblock \emph{arXiv preprint arXiv:2411.04983}, 2024.
+
+\bibitem[Zimmermann et~al.(2025)Zimmermann, Wiltzer, Szeto, Alvarez-Melis, and Mackey]{zimmermann2025kerjepa}
+Eric Zimmermann, Harley Wiltzer, Justin Szeto, David Alvarez-Melis, and Lester Mackey.
+\newblock {KerJEPA}: Kernel discrepancies for euclidean self-supervised learning.
+\newblock \emph{arXiv preprint arXiv:2512.19605}, 2025.
+
+\end{thebibliography}

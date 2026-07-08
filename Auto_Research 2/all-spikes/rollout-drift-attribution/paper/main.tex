@@ -1,0 +1,196 @@
+\documentclass{article}
+\usepackage[preprint]{caisc_2026}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\title{When Collapse Censors Drift: Differential Encoder Collapse Pre-empts Regularizer--Protocol Attribution in Latent World Models}
+
+\author{%
+  Anonymous Author(s)\\
+  Affiliation\\
+  Address\\
+  \texttt{email}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Rollout drift, the compounding of prediction error during multi-step latent imagination, limits the use of world models for long-horizon planning. A prior controlled study attributed drift primarily to the training protocol (1-step teacher forcing versus multi-step closed-loop BPTT) rather than to the marginal regularizer, but implemented ``SIGReg'' as a moment-matching proxy. We pre-registered a follow-up with a faithful sliced Epps--Pulley statistic: a 3-regularizer $\times$ 2-protocol $\times$ 5-environment factorial (201 runs) with ground-truth-normalized metrics, collapse-as-outcome analysis, and an interventional encoder-swap probe. The pre-registered attribution contrasts were largely \emph{censored by differential collapse}: every unregularized run collapsed, and the Epps--Pulley regularizer, at weights selected by standard validation prediction error, produced dimensional or variance collapse on three of four non-bridge environments, while the crude moment proxy survived almost everywhere. We identify a candidate mechanism: exact collapse is a stationary point of the Epps--Pulley loss whose value ($1+\nicefrac{1}{\sqrt3}-\sqrt2\approx0.163$ at $\gamma{=}\nicefrac12$) matches the observed final loss of collapsed runs to four digits, and the statistic is bounded there, whereas the moment penalty grows as the latent dimension. On the one environment where both regularizers survived (Lorenz), closed-loop training reduced integrated rollout error in all five seeds under both regularizers (geometric ratios $0.046$ and $0.30$), with a short-horizon cost and long-horizon benefit, and regularizer differences were concentrated under 1-step training. We argue that collapse acts as a post-treatment intercurrent event, analogous to truncation by death, that can leave otherwise clean factorial drift studies unidentified, and must be reported as a primary outcome wherever marginal regularizers are compared.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Latent world models compress observations $o_t$ into latents $z_t=\mathrm{enc}(o_t)$ and learn a transition $f$ with $z_{t+1}\approx f(z_t,a_t)$, then plan by rolling $f$ forward in imagination \citep{hafner2023dreamerv3,lecun2022path}. When rollouts drift, imagined futures diverge from reachable ones, and planners that optimize over imagined trajectories inherit the error \citep{zhou2024dinowm,sobal2025planning}. Two accounts of drift circulate. One blames the marginal regularizer: objectives such as SIGReg \citep{balestriero2025lejepa} constrain the aggregate distribution $q(z)$ but not the conditional $p(z_{t+1}\mid z_t)$, so fixing the regularizer is held to be the path to stable rollouts. The other blames the training protocol: models supervised only on one-step transitions from encoded states are never trained on their own predictions, a mismatch long known in sequence modeling \citep{lamb2016professor}, and multi-step closed-loop training is the corrective.
+
+A prior controlled study \citep{anon2026drift} concluded that the protocol dominates: 1-step teacher forcing produced exploding perturbation amplification even on a contractive linear system, and 5-step BPTT largely repaired it. That study, however, implemented ``SIGReg'' as the moment proxy $\lVert\mu\rVert^2+\lVert\Sigma-I\rVert_F^2$. Since the distinctive content of SIGReg is its characteristic-function test of full normality, the most serious objection to the prior result is that its regularizer arm never contained the regularizer under discussion.
+
+This paper is the pre-registered follow-up. We fixed the regularizer arm (a sliced exact-integral Epps--Pulley statistic, Section~\ref{sec:regularizers}), added environments spanning stationary-Gaussian, chaotic, action-conditioned, and pixel-observed regimes, normalized drift by ground-truth amplification, pre-registered contrasts and decision criteria, and added an interventional encoder-swap probe. We committed in advance to publishing whichever verdict the data supported: regularizer, protocol, interaction, mechanism, environment dependence, or null.
+
+The data returned a verdict we had not enumerated: the pre-registered attribution contrasts were largely \emph{censored by differential collapse}. Every unregularized run collapsed (50/50). The Epps--Pulley regularizer, at weights selected by validation prediction error, collapsed on three of four non-bridge environments (33/33 main-factorial runs there), while the moment proxy survived almost everywhere. The comparison the field wants, faithful SIGReg versus nothing on drift, does not exist in this regime because ``nothing'' does not survive, and at the selected weights the faithful statistic often does not either.
+
+We make three claims, scoped to this finite-training, overcomplete-latent regime. \textbf{(C1)} Regularizer choice acted primarily as a representation-viability gate: differential collapse pre-empted the pre-registered regularizer-versus-none drift contrasts in most environments, and the failure was invisible to one-step validation error. Its direct effect on drift therefore remains unidentified here, not refuted. \textbf{(C2)} Where both regularized conditions survived (Lorenz), closed-loop training reduced integrated rollout error in every seed under both regularizers, trading a short-horizon penalty for a large long-horizon gain, and regularizer differences appeared only under 1-step training (an exploratory interaction pattern). \textbf{(C3)} Mechanistically, exact collapse is a stationary point of the Epps--Pulley loss with a small bounded value that matches the observed final losses of collapsed runs to four digits, whereas the moment penalty at collapse grows with latent dimension; bounded saturation of the anti-collapse penalty is a candidate explanation for why the faithful statistic is the more collapse-prone one.
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{JEPA world models and SIGReg.} LeJEPA \citep{balestriero2025lejepa} motivates an isotropic Gaussian embedding target and introduces SIGReg, which tests random one-dimensional projections for normality with an Epps--Pulley statistic. LeWorldModel \citep{maes2026lewm} trains an end-to-end JEPA world model from pixels with next-embedding prediction plus SIGReg and no stop-gradients, EMA encoders, or reconstruction; our minimal recipe mirrors it at small scale. KerJEPA \citep{zimmermann2025kerjepa} identifies the Epps--Pulley regularizer as a sliced Gaussian-kernel MMD, licensing the closed-form variant we use. Fast LeWorldModel \citep{gao2026fastlewm} attributes accumulated latent error to autoregressive one-step rollout and changes the inference interface; we exclude interface changes to keep the protocol factor clean.
+
+\textbf{Exposure bias.} The teacher-forcing/free-running mismatch is classical \citep{lamb2016professor}; recent work frames recursive forecasting failure as epistemic underidentification \citep{green2026exposure}. Our protocol factor operationalizes this axis in latent space.
+
+\textbf{Collapse in self-supervised learning.} Collapse avoidance is central to non-contrastive SSL, and LeJEPA positions SIGReg as the principled device. Our results support the anti-collapse framing with a twist: the collapse behavior of the faithful statistic is strongly environment- and weight-dependent in the world-model setting, and its failure mode is quiet.
+
+\textbf{Censoring by intercurrent events.} Conditioning on a post-treatment variable biases causal contrasts; in clinical trials, death before outcome measurement (``truncation by death'') is the canonical case. We import this lens: collapse is an intercurrent event for drift measurement.
+
+\section{Experimental Design}
+\label{sec:design}
+
+The design was written and externally reviewed before any GPU run; all deviations are in the ledger of Appendix~\ref{app:deviations}. Code, manifests, and analysis are in the supplement.
+
+\subsection{Model and Training Protocols}
+\label{sec:protocols}
+
+All conditions share one architecture: an encoder (2-layer MLP, width 128, $d{=}16$ for state observations; 4-block CNN, $d{=}32$ for pixels) and a transition MLP over $[z,a]$. No decoder, reward head, stop-gradient, or EMA target: prediction plus regularization are the only losses, matching the minimal LeWorldModel recipe.
+
+\textbf{P0 (1-step teacher forcing):} $\mathcal{L}_{\text{pred}}=\lVert f(\mathrm{enc}(o_t),a_t)-\mathrm{enc}(o_{t+1})\rVert_2^2$.
+\textbf{P1 ($H$-step closed-loop BPTT), $H{=}8$:} $\hat z_{t+k}=f(\hat z_{t+k-1},a_{t+k-1})$ from $\hat z_t=\mathrm{enc}(o_t)$, $\mathcal{L}_{\text{pred}}=\frac1H\sum_{k}\lVert \hat z_{t+k}-\mathrm{enc}(o_{t+k})\rVert_2^2$.
+\textbf{P0.5 ($H$-step teacher forcing, control):} dense multi-horizon targets, each step conditioned on the encoded previous observation; run on a subset to separate supervision density from closed-loop exposure.
+
+\subsection{Regularizers}
+\label{sec:regularizers}
+
+\textbf{R0 (none):} $\mathcal{L}=\mathcal{L}_{\text{pred}}$.
+\textbf{R1 (moment proxy, bridge):} $\mathcal{L}_{\text{reg}}=\lVert\mu_B\rVert_2^2+\lVert\Sigma_B-I\rVert_F^2$, reproducing the prior study's condition.
+\textbf{R2 (sliced exact-integral Epps--Pulley):} for latents $Z\in\mathbb{R}^{B\times d}$ at one time point and $M{=}256$ random unit directions $u_m$, with $h=Zu_m$ and $\gamma{=}\nicefrac12$,
+\begin{equation}
+\label{eq:ep}
+\mathrm{EP}_\gamma(h)=\tfrac{1}{B^2}\textstyle\sum_{i,j}e^{-\gamma(h_i-h_j)^2}+\tfrac{1}{\sqrt{1+4\gamma}}-\tfrac{2}{B\sqrt{1+2\gamma}}\textstyle\sum_i e^{-\gamma h_i^2/(1+2\gamma)},
+\end{equation}
+and $\mathrm{SIGReg}(Z)=\frac1M\sum_m \mathrm{EP}_\gamma(Zu_m)$. Equation~\eqref{eq:ep} is the exact integral of the Epps--Pulley characteristic-function statistic under a Gaussian weighting, equivalently a sliced Gaussian-kernel MMD to $\mathcal{N}(0,1)$ \citep{zimmermann2025kerjepa}. It is a faithful full-distribution normality test, unlike R1, but it is not numerically identical to the official quadrature estimator of \citet{balestriero2025lejepa}; all claims are implementation-specific and we write ``EP-SIGReg'' below.
+
+Regularizer exposure is equalized across protocols: the statistic is computed per time point on the full batch and averaged over the time points visible to that protocol's loss, never on a flattened pool of temporally correlated frames. Under the main design R1/R2 apply only to encoded latents, never to rolled-out predictions.
+
+\textbf{Weight selection.} $\lambda$ was tuned per (regularizer, environment) on $\{0.01,0.03,0.1,0.3,1.0\}$, seed 0, by validation one-step MSE \emph{subject to non-collapse diagnostics}, never on rollout metrics, and frozen across protocols, so tuning cannot manufacture a regularizer--protocol interaction. When every grid point failed the collapse screen, the selector fell back to best validation MSE; this fallback and its consequences are audited in Section~\ref{sec:collapse-results} and Appendix~\ref{app:lambda}.
+
+\subsection{Environments}
+\label{sec:envs}
+
+\textbf{E0-det (bridge only):} deterministic stable linear, $x_{t+1}=Ax_t$, eigenvalues $\{0.7,0.8,0.9\}$; the prior study's sanity check, retained for R0/R1 bridge cells.
+\textbf{E0 (stationary OU):} same contraction with noise calibrated so the marginal is $\mathcal{N}(0,I_3)$ at every step; SIGReg's favorable regime by construction, added because a time-varying marginal makes the Gaussian target unfair to it.
+\textbf{E1 (Lorenz):} $\sigma{=}10,\rho{=}28,\beta{=}\nicefrac83$, $dt{=}0.01$; chaotic, so drift must be measured as excess over ground truth.
+\textbf{E2/E3 (action-conditioned point mass, state/pixels):} identical clipped dynamics; E3 renders $64{\times}64$ grayscale frames, isolating the pixel-encoder axis.
+
+\subsection{Metrics, Collapse Rule, and Pre-Registered Criteria}
+\label{sec:metrics}
+
+The primary outcome is \textbf{integrated probe-space open-loop error}: a ridge probe from $z$ to true state is fit on training data; the model rolls out freely along held-out action sequences; probe-space error against the true trajectory is integrated over horizons $1..50$. Probe space makes different latent geometries commensurable, and error against the \emph{true} trajectory means over-contraction scores badly, unlike signed amplification ratios that reward collapsed sensitivity. Amplification fidelity $|\log(A_{\text{model},25}/A_{\text{gt},25})|$ is secondary.
+
+\textbf{Collapse rule.} A run is flagged when effective latent dimension $<2$, rank$_{1\%}<2$, or probe $R^2<0.5$ on state-recoverable environments. Because these axes differ, we decompose flagged runs into \emph{variance} collapse (near-zero scale), \emph{dimensional} collapse (rank-deficient but decodable), and \emph{informational} collapse (probe failure) in Section~\ref{sec:collapse-results}. Collapse is an outcome; drift conditional on survival is reported with the conditioning explicitly treated as post-treatment selection.
+
+\textbf{Pre-registered contrasts.} On the log primary outcome with seeds as paired blocks and cluster bootstrap over seeds: $C_R=(\text{R2}-\text{R0})$ under P0; $C_P=(\text{P1}-\text{P0})$ averaged over R0 and R2; $C_I$ the protocol difference of $C_R$; equivalence margin $\log 1.25$. Verdict definitions preceded execution (Appendix~\ref{app:prereg}). We supplement the bootstrap with exact paired sign-flip tests and leave-one-seed-out estimates, since $n{=}5$ seeds bound what a bootstrap can certify.
+
+\textbf{Encoder-swap probe.} On E0, encoders from P0- and P1-trained R2 runs (seeds 0--2) are frozen and dynamics retrained under both protocols, a full $2{\times}2$ with retrained diagonals.
+
+\textbf{Scale.} 45 $\lambda$-pilot runs, 144 factorial/control runs, 12 swap runs on $7{\times}$ NVIDIA L4, under \$20 total. Mid-execution, a wall-clock constraint forced a uniform training-step reduction (state $20\text{k}{\to}10\text{k}$, visual $15\text{k}{\to}8\text{k}$) and the dropping of the $\lambda$-sensitivity, matched-dimension, and $M{=}1024$ arms; the deviation ledger is Appendix~\ref{app:deviations}.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Differential Collapse Censors the Pre-Registered Contrasts}
+\label{sec:collapse-results}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/fig1_collapse_matrix.pdf}
+  \caption{Collapse probability by environment and condition (seeds pooled; ``--'' = not in design). Every unregularized run collapsed. EP-SIGReg at validation-selected $\lambda$ collapsed on OU and both point-mass environments under every protocol, surviving only on Lorenz. The moment proxy is the most collapse-robust condition.}
+  \label{fig:collapse}
+\end{figure}
+
+Figure~\ref{fig:collapse} shows the result that reorganizes the paper. \textbf{R0 collapsed in 50/50 runs}: with prediction loss alone this minimal recipe has no surviving optimum in any environment, under either protocol. \textbf{R2 collapsed in 33/33 main-factorial runs on OU and both point-mass environments} (and 4/5 under P0.5 on OU) while surviving 10/10 on Lorenz. \textbf{R1 survived} everywhere under P0 and in most other cells (60\% collapse OU/P1; 80\% E0-det/P1).
+
+Decomposing the flag: of 33 collapsed R2 runs, 19 are \emph{variance} collapse (near-zero scale), 5 \emph{dimensional} (rank $<2$ yet probe $R^2$ 0.67--0.79 on OU: state still decodable on a degenerate manifold), 9 \emph{informational} (probe failure, mostly point-mass). ``Collapse'' here therefore does not always mean information loss, and we use the criterion-specific term throughout.
+
+\textbf{The $\lambda$ audit.} The selection protocol chose $\lambda{=}1.0$ (the grid boundary) for R2 on OU and Lorenz; on both point-mass environments \emph{every} R2 grid point failed the pilot collapse screen, so the fallback selected by validation MSE alone, which under collapse favors the most degenerate solution (validation one-step MSE of a collapsed code is spuriously tiny: $4{\times}10^{-7}$ on OU). The honest statement is not ``EP-SIGReg collapses world models'' but: \emph{at weights chosen by a standard validation protocol, the faithful statistic produced degenerate latents on three of four environments, and the failure is invisible, indeed attractive, to one-step validation error}. Whether other weights avoid this is unresolved here (the $\lambda$-sensitivity arm was dropped; Section~\ref{sec:limits}).
+
+\textbf{A candidate mechanism.} At exact collapse ($Z\equiv0$), every projection is degenerate and Eq.~\eqref{eq:ep} evaluates to $1+\nicefrac{1}{\sqrt3}-\sqrt2\approx0.1631$ at $\gamma{=}\nicefrac12$: a stationary point of the regularizer with a small, \emph{bounded} value (the statistic is an MMD, bounded by construction). The observed final regularizer loss of the 33 collapsed R2 runs has median exactly $0.1631$ (range $0.103$--$0.163$). The moment penalty at the same point is $\lVert -I\rVert_F^2=d=16$: unbounded in dimension and two orders of magnitude larger. Once trajectories approach the collapsed stationary point, the EP penalty offers a vanishing restoring force while the moment penalty does not. We present this as a candidate optimization-level explanation consistent with the losses we log, not as a proven cause; it yields a directly testable prediction (collapse frequency should fall with penalties that diverge at degeneracy, or with warm starts away from the stationary point).
+
+\subsection{Where Both Regularizers Survive: Protocol Effects and an Exploratory Interaction}
+\label{sec:lorenz}
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}{0.44\linewidth}
+    \includegraphics[width=\linewidth]{figures/fig2_lorenz_interaction.pdf}
+  \end{subfigure}\hfill
+  \begin{subfigure}{0.50\linewidth}
+    \includegraphics[width=\linewidth]{figures/fig3_lorenz_horizons.pdf}
+  \end{subfigure}
+  \caption{Lorenz, the only environment where R1 and R2 both survive both protocols. Left: integrated probe-space rollout error (mean $\pm$ 95\% CI over 5 seeds, log scale). Right: error growth by horizon; closed-loop training is \emph{worse} at $H{=}1$ and much better at $H{=}50$.}
+  \label{fig:lorenz}
+\end{figure}
+
+Lorenz is the single environment where R1 and R2 are both fully evaluable ($C_R$ against R0 remains censored even here, since R0 collapsed). Because the pre-registered $C_P$ averages over R0, it too is formally unevaluable; we therefore report $C_{P\mid R2}$ and $C_{P\mid R1}$ and label them as such. Moving P0${\to}$P1 reduced the log primary outcome in \emph{all five seeds under both regularizers}: geometric ratios $0.046$ under R1 (mean log effect $-3.09$, seed-blocked bootstrap CI $[-4.6,-1.7]$) and $0.30$ under R2 ($-1.20$, CI $[-1.75,-0.65]$); exact two-sided sign-flip $p=0.0625$ for each, the minimum attainable with five seeds, with leave-one-seed-out ranges $[-3.7,-2.4]$ and $[-1.4,-1.0]$.
+
+The horizon profile (Figure~\ref{fig:lorenz}, right) shows this is a genuine tradeoff, not uniform improvement: under R2, closed-loop training is $2.6\times$ \emph{worse} at $H{=}1$ and $0.16\times$ at $H{=}50$ (under R1: $1.06\times$ and $0.018\times$). Closed-loop training buys long-horizon stability at short-horizon cost, consistent with exposure to self-generated states rather than better one-step modeling.
+
+The regularizer comparison is exploratory (it was not a pre-registered contrast): under P0, R2 beats R1 by a geometric factor of $6.2$ (mean log difference $-1.82$; sign-flip $p=0.125$); under P1 the two are indistinguishable (ratio $1.07$, $p=0.56$). The interaction pattern, regularizer choice mattering only under the deficient protocol, is thus descriptive with $n{=}5$: visible in the means, not certified by the exact test ($p=0.19$).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\linewidth]{figures/fig4_pointmass_protocol.pdf}
+  \caption{Point-mass environments, surviving cells (R1 only). Closed-loop training reduces integrated rollout error on both; the dense teacher-forcing control (P0.5) does not, isolating closed-loop exposure rather than supervision density as the operative ingredient.}
+  \label{fig:pointmass}
+\end{figure}
+
+The point-mass environments corroborate the protocol direction where cells survive (R1 only): $4.6{\to}2.7$ (state) and $37.5{\to}8.8$ (visual) moving P0${\to}$P1, and the P0.5 dense-supervision control lands at $46.4$, no better than P0 (Figure~\ref{fig:pointmass}).
+
+\subsection{The Encoder-Swap Probe Returns a Null}
+\label{sec:swap}
+
+All twelve swap runs on OU inherited the R2-on-OU dimensional-collapse regime, and the primary outcome was flat across the $2{\times}2$ ($\approx80\pm5$; OU's rollout-error noise floor is $\approx76$). The probe is uninformative in this regime: OU error saturates near the floor for degenerate and healthy models alike. We report a null of the probe, not of the mechanism.
+
+\subsection{Verdict Against the Pre-Registered Criteria}
+\label{sec:verdict}
+
+$C_R$: \textbf{censored} (no surviving R0 cell anywhere). $C_P$ as pre-registered (averaged over R0, R2): \textbf{censored}; the conditional versions $C_{P\mid R1},C_{P\mid R2}$ are supported on Lorenz with all-seed consistency, and directionally corroborated on point-mass under R1. $C_I$: censored; the descriptive interaction on Lorenz does not reach exact-test significance. Encoder-geometry: probe null under collapse. Formal verdict: \textbf{mixed}, and the substantive content of the paper is C1--C3 of Section~\ref{sec:intro}. We emphasize what this verdict is not: it is not ``protocol dominates'' as pre-registered (that criterion required two dynamics families and $C_R$ equivalence), and it is not ``SIGReg fails'' (the weight-selection audit blocks that reading).
+
+The bridge to the prior study also degraded: on E0-det, R1/P1 flagged 4/5 seeds while R1/P0 survived cleanly, so the prior paper's cleanest environment did not reproduce under our shorter training budget. Training length, $\lambda$, metric, and implementation all changed; we flag the non-reproduction rather than adjudicate it.
+
+\section{Limitations}
+\label{sec:limits}
+
+(1) \textbf{Weight selection is the largest confound}: the $\lambda$-sensitivity arm was dropped under the wall-clock constraint, R2's selected weights sat at the grid boundary or arose from an all-collapsed fallback, and R1/R2 loss scales differ so the shared numerical grid is not dose-matched. All collapse claims are ``at the selected weights.'' (2) The uniform step reduction is condition-uniform but not treatment-neutral: conditions may converge or collapse at different rates, so claims hold at the observed training horizon; the bridge non-reproduction makes this concrete. (3) R2 is an exact-integral EP variant; the pre-registered parity test against the official quadrature implementation was not executed. (4) Three pre-registration violations discovered in post-hoc code audit: final metrics were computed on the validation split rather than the held-out test split; evaluation windows were sampled per run rather than from a fixed shared suite, weakening seed-pairing; and the regularizer's random projections consume the same RNG stream as minibatch sampling, so R2 conditions saw different minibatch sequences than R0/R1 at the same seed. (5) Environments are small and synthetic; the visual task is a single Gaussian-blob point mass; five (three visual) seeds per cell. (6) The matched-latent-dimension and $M{=}1024$ arms were dropped, leaving the overcomplete-latent explanation for R2's behavior untested.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We set out to test whether a faithful SIGReg overturns the protocol attribution of rollout drift, and mostly could not run the intended comparison: differential collapse censored it. What survives is, first, a conditional replication, where models live, closed-loop training reduces long-horizon rollout error in every seed, at short-horizon cost, and dense supervision without closed-loop exposure does not; second, an audited failure mode, a faithful normality statistic paired with standard validation-based weight selection can quietly select degenerate representations, plausibly because its penalty saturates at a bounded stationary point where cruder unbounded penalties do not; and third, a methodological rule we think generalizes: collapse is an intercurrent event for drift measurement, conditioning on survival is post-treatment selection, and factorial studies of world-model regularizers should pre-register collapse as a primary outcome and power their designs to remain identified when arms die.
+
+\begin{ack}
+Experiments, analysis, and writing were assisted by Claude (Anthropic), with human direction of the research question, compute budget, and final approval; external automated review at design and results stages was provided by OpenAI Codex. The full division of labor, including exact prompts, is documented in Appendix~\ref{app:session}. Compute: one RunPod $7{\times}$L4 instance, under \$20 of a \$30 budget.
+\end{ack}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\newpage
+\appendix
+
+\input{appendix}
+
+\newpage
+\input{checklists}
+
+\end{document}

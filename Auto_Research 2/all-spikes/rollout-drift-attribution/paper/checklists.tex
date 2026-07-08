@@ -1,0 +1,114 @@
+\section*{Conference For AI Scientists 2026 - AI Involvement Checklist}
+\label{checklist_ai_involvement}
+
+\subsection*{Research Stage Assessment}
+
+\begin{enumerate}
+
+    \item \textbf{Hypothesis development}:
+
+    Answer: \involvementB{}
+
+    Iteration Effort: \iterationLow{}
+
+    Explanation: The central hypothesis (rollout drift is caused by both the marginal regularizer and the training protocol, and the two interact) was supplied by the human author, informed by a prior study. AI sharpened it into a pre-registerable research question with enumerated rival outcomes, performed the literature positioning, and identified the decisive weakness of the prior study (a moment proxy standing in for SIGReg) that the follow-up targets.
+
+    \item \textbf{Experimental design and implementation}:
+
+    Answer: \involvementD{}
+
+    Iteration Effort: \iterationMedium{}
+
+    Explanation: AI produced the factorial design, pre-registered contrasts and decision criteria, all environment/regularizer/protocol/metric code, the sweep orchestration and GPU-pool runner, and executed all 201 runs on a remote cluster, including a mid-execution replan under a human-imposed 8-hour wall-clock ceiling. The human set the compute budget, provisioned instances, and approved phase transitions. Iterations included four design versions under two external automated review rounds, two dispatch bugs caught and fixed within minutes, and a CPU-oversubscription pathology diagnosed and corrected mid-run.
+
+    \item \textbf{Analysis of data and interpretation of results}:
+
+    Answer: \involvementD{}
+
+    Iteration Effort: \iterationMedium{}
+
+    Explanation: AI performed all statistical analysis (pre-registered contrasts, seed-blocked bootstrap, exact sign-flip tests, collapse-mode decomposition), derived and empirically verified the Epps--Pulley stationary-point result, and wrote the interpretation. A second AI system's results-stage review corrected an arithmetic-mean effect size to its geometric value and flagged estimand mismatches, which were adopted. The human reviewed the summary conclusions.
+
+    \item \textbf{Writing}:
+
+    Answer: \involvementD{}
+
+    Iteration Effort: \iterationLow{}
+
+    Explanation: AI wrote the manuscript, generated all figures from logged run data, and compiled the final document; one major revision pass followed the external results-stage review. The human approved the framing.
+
+\end{enumerate}
+
+\subsection*{AI System Documentation}
+
+\begin{enumerate}
+    \setcounter{enumi}{4}
+
+    \item \textbf{AI systems used}:
+
+    Description: Two frontier large language models were used. The primary system operated as an autonomous research agent inside a command-line agent harness with shell, file, and SSH access, alternating between a higher-capability variant for planning phases and a faster variant for execution phases. A second frontier language model, prompted at high reasoning effort in a read-only sandbox, served as an external reviewer at the design stage and the results stage. No fine-tuning was performed; both systems were used via their standard interfaces.
+
+    \item \textbf{Observed AI Limitations}:
+
+    Description: (i) Cost-model extrapolation error: the primary agent's isolated single-GPU benchmark underestimated concurrent-load runtimes by roughly an order of magnitude until CPU-thread oversubscription was diagnosed. (ii) Infrastructure fragility: two launch bugs (GPU dispatch, command parsing) reached the cluster before being caught by monitoring. (iii) Statistical slips: the agent initially reported an arithmetic-mean ratio ($16\times$) where the geometric effect was $6.2\times$, and conflated a conditional contrast with its pre-registered marginal version; both were caught by the second system's review, not by the agent itself. (iv) Pre-registration drift in code: three silent divergences between the written protocol and the implementation (validation-as-test reporting, per-run evaluation windows, shared RNG streams) were only found in post-hoc audit. External automated review materially improved rigor at both stages.
+
+\end{enumerate}
+
+\newpage
+
+\section*{Conference For AI Scientists 2026 - Reproducibility and Responsibility Checklist}
+\label{checklist_reproducibility}
+
+\begin{enumerate}
+
+\item {\bf Claims}
+    \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Claims C1--C3 are stated in the introduction with explicit scope restrictions (finite-training, overcomplete-latent regime, selected weights), matched to Section 4 results, and the censored pre-registered contrasts are reported as censored rather than repurposed.
+
+\item {\bf Limitations}
+    \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Section 5 lists six limitation classes including the dropped $\lambda$-sensitivity arm, the mid-execution step reduction, and three pre-registration violations; Appendix B is a complete deviation ledger.
+
+\item {\bf Theory assumptions and proofs}
+    \item[] Question: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The single theoretical claim (the collapsed configuration is a bounded stationary point of the Epps--Pulley loss, value $1+\nicefrac{1}{\sqrt3}-\sqrt2$ at $\gamma{=}\nicefrac12$) is derived in Appendix D with its assumptions, and is presented as a candidate mechanism, not a causal proof.
+
+\item {\bf Experimental result reproducibility}
+    \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Architectures, losses, protocols, environments, $\lambda$ grids and selections, seeds, step budgets, and the collapse rule are specified in Section 3 and Appendices A--C; known seeding caveats are disclosed (Appendix B, items 7--8).
+
+\item {\bf Open access to data and code}
+    \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The supplement contains all source, run manifests, per-run metrics for all 201 runs, analysis and figure scripts, pre-registration documents with version history, and both external review transcripts (Appendix H).
+
+\item {\bf Experimental setting/details}
+    \item[] Question: Does the paper specify all the training and test details necessary to understand the results?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Section 3 and Appendix C specify data splits, optimizers, hyperparameters and their selection protocol; the known deviation (validation split used for final metrics) is disclosed in Appendix B.
+
+\item {\bf Experiment statistical significance}
+    \item[] Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Seed-blocked bootstrap CIs, exact paired sign-flip tests, and leave-one-seed-out ranges are reported for the main contrasts (Section 4.2, Appendix E); variability is across seeds (data + initialization).
+
+\item {\bf Experiments compute resources}
+    \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources needed to reproduce the experiments?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Appendix F gives the full compute account: one $7\times$L4 instance, 201 runs, under 3 hours wall clock, under \$20.
+
+\item {\bf Research Ethics}
+    \item[] Question: Does the research conducted in the paper conform with the NeurIPS Code of Ethics, except where CAISc's AI authorship policies apply?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Synthetic data only; no human subjects, personal data, or dual-use concerns.
+
+\item {\bf Broader impacts}
+    \item[] Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
+    \item[] Answer: \answerNA{}
+    \item[] Justification: This is a methodological study on synthetic environments about how to attribute failures in world-model training; its societal impact is mediated entirely through improved research practice, and no direct positive or negative application pathway exists to discuss.
+
+\end{enumerate}

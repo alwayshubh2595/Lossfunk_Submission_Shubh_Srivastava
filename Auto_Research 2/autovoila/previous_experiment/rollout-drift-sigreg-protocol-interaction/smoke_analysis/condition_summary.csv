@@ -1,0 +1,3 @@
+env,regularizer,protocol,n,collapsed_rate,excess_amp_50_mean,excess_amp_50_ci95,perturb_amp_50_mean,open_loop_mse_50_mean,effective_dim_mean,linear_probe_r2_mean
+pointmass,moment,hstep-tf,1,1.0,nan,nan,nan,nan,1.9572362776738535e-05,-0.7697125353217722
+stable-linear,sigreg,bptt,1,0.0,nan,nan,nan,nan,3.717721788875434,0.9893231954727355

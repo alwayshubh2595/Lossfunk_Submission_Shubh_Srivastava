@@ -1,0 +1,11 @@
+{
+  "lorenz:moment": 0.1,
+  "lorenz:sigreg": 1.0,
+  "ou:moment": 0.03,
+  "ou:sigreg": 1.0,
+  "pointmass-state:moment": 0.03,
+  "pointmass-state:sigreg": 0.03,
+  "pointmass:moment": 0.1,
+  "pointmass:sigreg": 0.01,
+  "stable-linear-det:moment": 0.01
+}

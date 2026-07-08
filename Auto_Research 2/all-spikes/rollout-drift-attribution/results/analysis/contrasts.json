@@ -1,0 +1,105 @@
+{
+  "equivalence_margin_log": 0.22314355131420976,
+  "per_env": {
+    "lorenz": {
+      "C_I_proxy_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_P_mean_lo_hi": [
+        -1.201572787394923,
+        -1.7506775945690047,
+        -0.6524679802208411
+      ],
+      "C_R_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "n_seeds_P_R0": 0,
+      "n_seeds_P_R2": 5,
+      "n_seeds_R_P0": 0
+    },
+    "ou": {
+      "C_I_proxy_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_P_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_R_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "n_seeds_P_R0": 0,
+      "n_seeds_P_R2": 0,
+      "n_seeds_R_P0": 0
+    },
+    "pointmass": {
+      "C_I_proxy_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_P_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_R_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "n_seeds_P_R0": 0,
+      "n_seeds_P_R2": 0,
+      "n_seeds_R_P0": 0
+    },
+    "pointmass-state": {
+      "C_I_proxy_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_P_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_R_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "n_seeds_P_R0": 0,
+      "n_seeds_P_R2": 0,
+      "n_seeds_R_P0": 0
+    },
+    "stable-linear-det": {
+      "C_I_proxy_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_P_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "C_R_mean_lo_hi": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "n_seeds_P_R0": 0,
+      "n_seeds_P_R2": 0,
+      "n_seeds_R_P0": 0
+    }
+  }
+}
